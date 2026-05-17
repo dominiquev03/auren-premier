@@ -3,7 +3,7 @@ import { PageShell } from "@/components/page-shell";
 import { Award, TrendingUp, Building2, Wrench } from "lucide-react";
 import { formatZAR } from "@/lib/products";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
   head: () => ({ meta: [{ title: "Contractor dashboard — Auren" }, { name: "description", content: "Your contractor profile, loyalty rewards and account summary." }] }),
 });
