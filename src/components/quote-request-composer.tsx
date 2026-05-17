@@ -12,6 +12,7 @@ type Attachment = {
   url: string;
   size: number;
   durationMs?: number;
+  file: Blob;
 };
 
 type Urgency = "standard" | "priority" | "urgent";
