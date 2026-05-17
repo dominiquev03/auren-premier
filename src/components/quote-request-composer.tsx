@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon, Video, Mic, MapPin, Send, X, Square, Play, Pause, Paperclip, Loader2, CheckCircle2 } from "lucide-react";
+import { Image as ImageIcon, Video, Mic, MapPin, Send, X, Square, Paperclip, Loader2, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 type Attachment = {
   id: string;
