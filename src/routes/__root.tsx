@@ -91,10 +91,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4b142e97-ebd7-4d28-9b94-d1479a8a98ba/id-preview-4f5efeb9--e1e376b1-6618-48fd-ba22-d58243127ab7.lovable.app-1779019631987.png" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/auren-logo.png" },
+      { rel: "icon", href: "/auren-logo.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
