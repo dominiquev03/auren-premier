@@ -77,6 +77,82 @@ function Home() {
         </div>
       </section>
 
+      {/* CONTRACTOR QUICK ACTIONS — convenience-first */}
+      <section className="mx-auto max-w-7xl px-6 py-16 border-t border-border/40">
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-3">On the job</p>
+            <h2 className="font-display text-3xl md:text-4xl">Back on site in under a minute.</h2>
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { icon: Repeat, t: "Reorder last", d: "ORD-7820 in one tap", to: "/orders" },
+            { icon: FileText, t: "Fast quote", d: "Snap a plan, get pricing", to: "/quotations" },
+            { icon: PackageSearch, t: "Browse stock", d: "Live JHB & CPT inventory", to: "/products" },
+            { icon: Receipt, t: "Upload POP", d: "Clear pending invoices", to: "/orders" },
+          ].map((a) => (
+            <Link key={a.t} to={a.to} className="group border border-border/60 rounded-xl p-5 hover:border-primary/50 hover:bg-secondary/30 transition flex flex-col gap-3">
+              <div className="h-10 w-10 rounded-full bg-gold-gradient grid place-items-center text-primary-foreground shadow-gold-glow">
+                <a.icon className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-display text-lg">{a.t}</p>
+                <p className="text-xs text-muted-foreground mt-1">{a.d}</p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition" />
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-10 grid lg:grid-cols-2 gap-6">
+          {/* Reorder recent */}
+          <div className="border border-border/60 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-display text-xl flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Recent orders</h3>
+              <Link to="/orders" className="text-xs text-primary hover:underline">All orders →</Link>
+            </div>
+            <ul className="space-y-3">
+              {recentOrders.map((o) => (
+                <li key={o.id} className="flex items-center justify-between gap-4 border border-border/40 rounded-lg p-4 hover:border-primary/40 transition">
+                  <div className="min-w-0">
+                    <p className="text-xs uppercase tracking-widest text-primary">{o.id}</p>
+                    <p className="text-sm mt-1 truncate">{o.items}</p>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1"><MapPin className="h-3 w-3" /> {o.eta}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="font-medium">{formatZAR(o.total)}</p>
+                    <button className="mt-2 inline-flex items-center gap-1.5 text-xs bg-gold-gradient text-primary-foreground px-3 py-1.5 rounded-full">
+                      <Repeat className="h-3 w-3" /> Reorder
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Saved job lists */}
+          <div className="border border-border/60 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-display text-xl">Saved job lists</h3>
+              <button className="text-xs text-primary hover:underline">+ New list</button>
+            </div>
+            <ul className="space-y-3">
+              {savedLists.map((l) => (
+                <li key={l.name} className="flex items-center justify-between border border-border/40 rounded-lg p-4 hover:border-primary/40 transition">
+                  <div>
+                    <p className="text-sm font-medium">{l.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{l.count} line items</p>
+                  </div>
+                  <button className="text-xs border border-border rounded-full px-3 py-1.5 hover:border-primary/60 transition">Add to cart</button>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-muted-foreground mt-5">Build a kit once. Order it on every callout.</p>
+          </div>
+        </div>
+      </section>
+
       {/* VALUE PROPS */}
       <section className="mx-auto max-w-7xl px-6 py-20 border-t border-border/40">
         <div className="grid md:grid-cols-4 gap-6">
