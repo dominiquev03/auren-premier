@@ -25,7 +25,7 @@ function QuotationsPage() {
   }, [search.new]);
 
   return (
-    <PageShell eyebrow="Trade quotations" title="Quote it. Specify it. Win it." lead="Snap a photo, record a voice note, drop a pin — we'll quote it. As simple as WhatsApp.">
+    <PageShell eyebrow="Trade quotations" title="Quote it. Specify it. Win it." lead="Snap a photo, record a voice note, drop a pin — we'll quote it. As simple as WhatsApp." watermark>
       {/* Fast request card */}
       <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/30 p-6 md:p-8">
         <div className="absolute inset-0 bg-gold-gradient opacity-[0.06]" />
