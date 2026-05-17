@@ -1,7 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Truck, Sparkles, Award } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Sparkles, Award, Repeat, FileText, PackageSearch, Receipt, Clock, MapPin } from "lucide-react";
 import heroImg from "@/assets/hero-faucet.jpg";
 import { products, formatZAR } from "@/lib/products";
+
+const recentOrders = [
+  { id: "ORD-7820", items: "14 items · Geberit + Cobra", total: 86430, eta: "Tomorrow, JHB" },
+  { id: "ORD-7811", items: "6 items · PVC fittings", total: 12490, eta: "16 May, PTA" },
+];
+
+const savedLists = [
+  { name: "Sandton Penthouse — Bathroom 2", count: 28 },
+  { name: "Standard 3-bed callout kit", count: 42 },
+  { name: "Geyser replacement bundle", count: 11 },
+];
 
 export const Route = createFileRoute("/")({
   component: Home,
