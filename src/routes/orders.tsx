@@ -19,7 +19,7 @@ const stages = ["Confirmed", "Packed", "Dispatched", "Out for delivery", "Delive
 
 function OrdersPage() {
   return (
-    <PageShell eyebrow="Orders & delivery" title="Every order, every step." lead="Live status from warehouse to doorstep, with proof-of-payment upload built in.">
+    <PageShell eyebrow="Orders & delivery" title="Every order, every step." lead="Live status from warehouse to doorstep, with proof-of-payment upload built in." watermark>
       <div className="space-y-5">
         {orders.map((o) => (
           <div key={o.id} className="border border-border/60 rounded-xl p-6 hover:border-primary/40 transition">

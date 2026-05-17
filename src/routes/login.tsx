@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -9,9 +10,12 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const [mode, setMode] = useState<"signin" | "register">("signin");
   return (
-    <div className="mx-auto max-w-md px-6 pt-20 pb-24">
+    <div className="mx-auto max-w-md px-6 pt-16 pb-24">
       <div className="text-center mb-10">
-        <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">Contractor portal</p>
+        <div className="flex justify-center mb-6">
+          <BrandLogo size={96} className="drop-shadow-[0_0_30px_rgba(212,175,55,0.35)]" />
+        </div>
+        <p className="text-xs uppercase tracking-[0.3em] text-primary mb-3">Contractor portal</p>
         <h1 className="font-display text-4xl">{mode === "signin" ? "Welcome back." : "Open an account."}</h1>
         <p className="text-sm text-muted-foreground mt-3 italic font-display">Quality you trust, relationships that last.</p>
       </div>
@@ -46,6 +50,9 @@ function LoginPage() {
       </div>
       <p className="text-center mt-6 text-sm text-muted-foreground">
         <Link to="/" className="hover:text-foreground">← Back home</Link>
+      </p>
+      <p className="text-center mt-8 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60">
+        Secured by AurenFlow™ · Enterprise-grade access control
       </p>
     </div>
   );

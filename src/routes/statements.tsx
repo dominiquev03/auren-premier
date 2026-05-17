@@ -17,7 +17,7 @@ const docs = [
 
 function StatementsPage() {
   return (
-    <PageShell eyebrow="Account ledger" title="Statements & invoices." lead="Every document, archived and downloadable — built for accounts payable.">
+    <PageShell eyebrow="Account ledger" title="Statements & invoices." lead="Every document, archived and downloadable — built for accounts payable." watermark>
       <div className="grid md:grid-cols-3 gap-4 mb-10">
         {[
           { l: "Current balance", v: formatZAR(28430) },

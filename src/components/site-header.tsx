@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, User } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -17,8 +18,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/60">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <span className="h-8 w-8 rounded-sm bg-gold-gradient grid place-items-center text-primary-foreground font-display font-bold text-base shadow-gold-glow">A</span>
-          <span className="font-display text-lg tracking-wide">Auren</span>
+          <BrandLogo size={36} className="drop-shadow-[0_0_12px_rgba(212,175,55,0.25)]" />
+          <span className="font-display text-lg tracking-[0.18em]">AUREN</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           {nav.map((n) => (
