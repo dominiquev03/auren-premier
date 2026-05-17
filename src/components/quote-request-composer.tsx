@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Image as ImageIcon, Video, Mic, MapPin, Send, X, Square, Play, Pause, Paperclip, Loader2, CheckCircle2 } from "lucide-react";
+import { Image as ImageIcon, Video, Mic, MapPin, Send, X, Square, Paperclip, Loader2, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 type Attachment = {
   id: string;
@@ -8,6 +12,7 @@ type Attachment = {
   url: string;
   size: number;
   durationMs?: number;
+  file: Blob;
 };
 
 type Urgency = "standard" | "priority" | "urgent";
@@ -77,6 +82,7 @@ export function QuoteRequestComposer({ open, onClose }: { open: boolean; onClose
         name: f.name,
         url: URL.createObjectURL(f),
         size: f.size,
+        file: f,
       });
     });
     setAttachments((cur) => [...cur, ...next]);
@@ -108,6 +114,7 @@ export function QuoteRequestComposer({ open, onClose }: { open: boolean; onClose
             url,
             size: blob.size,
             durationMs: Date.now() - startedAtRef.current,
+            file: blob,
           },
         ]);
         stream.getTracks().forEach((t) => t.stop());
@@ -143,14 +150,58 @@ export function QuoteRequestComposer({ open, onClose }: { open: boolean; onClose
     );
   }
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   async function submit() {
     if (!message.trim() && attachments.length === 0) return;
+    if (!user) {
+      toast.error("Please sign in to send a quotation.");
+      navigate({ to: "/login", search: { redirect: "/quotations?new=1" } });
+      return;
+    }
     setSubmitting(true);
-    // TODO: POST to AurenFlow ingestion endpoint via createServerFn
-    // (multipart: message, urgency, siteAddress, siteContact, coords, attachments[])
-    await new Promise((r) => setTimeout(r, 900));
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const { data: quote, error: qErr } = await supabase
+        .from("quote_requests")
+        .insert({
+          user_id: user.id,
+          message: message.trim() || null,
+          urgency,
+          site_address: siteAddress || null,
+          site_contact: siteContact || null,
+          gps_lat: coords?.lat ?? null,
+          gps_lng: coords?.lng ?? null,
+        })
+        .select()
+        .single();
+      if (qErr) throw qErr;
+
+      for (const a of attachments) {
+        const ext = a.name.split(".").pop() || (a.kind === "audio" ? "webm" : "bin");
+        const path = `${user.id}/${quote.id}/${a.id}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("quote-media").upload(path, a.file, {
+          contentType: a.file.type || undefined,
+          upsert: false,
+        });
+        if (upErr) throw upErr;
+        await supabase.from("quote_attachments").insert({
+          quote_id: quote.id,
+          user_id: user.id,
+          kind: a.kind,
+          storage_path: path,
+          name: a.name,
+          size: a.size,
+          duration_ms: a.durationMs ?? null,
+        });
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send request.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function reset() {

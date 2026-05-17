@@ -10,46 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
-import { Route as StatementsRouteImport } from './routes/statements'
-import { Route as QuotationsRouteImport } from './routes/quotations'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProductsRouteImport } from './routes/products'
-import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalTermsRouteImport } from './routes/legal.terms'
 import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
 import { Route as LegalIpRouteImport } from './routes/legal.ip'
+import { Route as AuthenticatedStatementsRouteImport } from './routes/_authenticated.statements'
+import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated.quotations'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated.profile'
+import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated.orders'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StatementsRoute = StatementsRouteImport.update({
-  id: '/statements',
-  path: '/statements',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuotationsRoute = QuotationsRouteImport.update({
-  id: '/quotations',
-  path: '/quotations',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -60,6 +42,10 @@ const LoginRoute = LoginRouteImport.update({
 const LegalRoute = LegalRouteImport.update({
   id: '/legal',
   path: '/legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -82,17 +68,43 @@ const LegalIpRoute = LegalIpRouteImport.update({
   path: '/ip',
   getParentRoute: () => LegalRoute,
 } as any)
+const AuthenticatedStatementsRoute = AuthenticatedStatementsRouteImport.update({
+  id: '/statements',
+  path: '/statements',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedQuotationsRoute = AuthenticatedQuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
-  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
-  '/profile': typeof ProfileRoute
-  '/quotations': typeof QuotationsRoute
-  '/statements': typeof StatementsRoute
   '/support': typeof SupportRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/orders': typeof AuthenticatedOrdersRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/quotations': typeof AuthenticatedQuotationsRoute
+  '/statements': typeof AuthenticatedStatementsRoute
   '/legal/ip': typeof LegalIpRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -101,12 +113,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
-  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
-  '/profile': typeof ProfileRoute
-  '/quotations': typeof QuotationsRoute
-  '/statements': typeof StatementsRoute
   '/support': typeof SupportRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/orders': typeof AuthenticatedOrdersRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/quotations': typeof AuthenticatedQuotationsRoute
+  '/statements': typeof AuthenticatedStatementsRoute
   '/legal/ip': typeof LegalIpRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -114,14 +127,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
-  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
-  '/profile': typeof ProfileRoute
-  '/quotations': typeof QuotationsRoute
-  '/statements': typeof StatementsRoute
   '/support': typeof SupportRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/orders': typeof AuthenticatedOrdersRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/quotations': typeof AuthenticatedQuotationsRoute
+  '/_authenticated/statements': typeof AuthenticatedStatementsRoute
   '/legal/ip': typeof LegalIpRoute
   '/legal/privacy': typeof LegalPrivacyRoute
   '/legal/terms': typeof LegalTermsRoute
@@ -132,12 +147,13 @@ export interface FileRouteTypes {
     | '/'
     | '/legal'
     | '/login'
-    | '/orders'
     | '/products'
+    | '/support'
+    | '/admin'
+    | '/orders'
     | '/profile'
     | '/quotations'
     | '/statements'
-    | '/support'
     | '/legal/ip'
     | '/legal/privacy'
     | '/legal/terms'
@@ -146,26 +162,29 @@ export interface FileRouteTypes {
     | '/'
     | '/legal'
     | '/login'
-    | '/orders'
     | '/products'
+    | '/support'
+    | '/admin'
+    | '/orders'
     | '/profile'
     | '/quotations'
     | '/statements'
-    | '/support'
     | '/legal/ip'
     | '/legal/privacy'
     | '/legal/terms'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/legal'
     | '/login'
-    | '/orders'
     | '/products'
-    | '/profile'
-    | '/quotations'
-    | '/statements'
     | '/support'
+    | '/_authenticated/admin'
+    | '/_authenticated/orders'
+    | '/_authenticated/profile'
+    | '/_authenticated/quotations'
+    | '/_authenticated/statements'
     | '/legal/ip'
     | '/legal/privacy'
     | '/legal/terms'
@@ -173,13 +192,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LegalRoute: typeof LegalRouteWithChildren
   LoginRoute: typeof LoginRoute
-  OrdersRoute: typeof OrdersRoute
   ProductsRoute: typeof ProductsRoute
-  ProfileRoute: typeof ProfileRoute
-  QuotationsRoute: typeof QuotationsRoute
-  StatementsRoute: typeof StatementsRoute
   SupportRoute: typeof SupportRoute
 }
 
@@ -192,39 +208,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/statements': {
-      id: '/statements'
-      path: '/statements'
-      fullPath: '/statements'
-      preLoaderRoute: typeof StatementsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quotations': {
-      id: '/quotations'
-      path: '/quotations'
-      fullPath: '/quotations'
-      preLoaderRoute: typeof QuotationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/products': {
       id: '/products'
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -239,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/legal'
       fullPath: '/legal'
       preLoaderRoute: typeof LegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -269,8 +264,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalIpRouteImport
       parentRoute: typeof LegalRoute
     }
+    '/_authenticated/statements': {
+      id: '/_authenticated/statements'
+      path: '/statements'
+      fullPath: '/statements'
+      preLoaderRoute: typeof AuthenticatedStatementsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/quotations': {
+      id: '/_authenticated/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof AuthenticatedQuotationsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/orders': {
+      id: '/_authenticated/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRoute
+  AuthenticatedStatementsRoute: typeof AuthenticatedStatementsRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedQuotationsRoute: AuthenticatedQuotationsRoute,
+  AuthenticatedStatementsRoute: AuthenticatedStatementsRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface LegalRouteChildren {
   LegalIpRoute: typeof LegalIpRoute
@@ -288,13 +338,10 @@ const LegalRouteWithChildren = LegalRoute._addFileChildren(LegalRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LegalRoute: LegalRouteWithChildren,
   LoginRoute: LoginRoute,
-  OrdersRoute: OrdersRoute,
   ProductsRoute: ProductsRoute,
-  ProfileRoute: ProfileRoute,
-  QuotationsRoute: QuotationsRoute,
-  StatementsRoute: StatementsRoute,
   SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport

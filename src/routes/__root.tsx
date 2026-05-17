@@ -12,6 +12,8 @@ import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { AuthProvider } from "@/hooks/use-auth";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -89,10 +91,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4b142e97-ebd7-4d28-9b94-d1479a8a98ba/id-preview-4f5efeb9--e1e376b1-6618-48fd-ba22-d58243127ab7.lovable.app-1779019631987.png" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/auren-logo.png" },
+      { rel: "icon", href: "/auren-logo.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
@@ -120,14 +122,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col">
-        <SiteHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <SiteFooter />
-        <WhatsAppButton />
-      </div>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <SiteHeader />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <SiteFooter />
+          <WhatsAppButton />
+          <Toaster position="top-center" theme="dark" />
+        </div>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

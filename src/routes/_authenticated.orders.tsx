@@ -3,7 +3,7 @@ import { PageShell } from "@/components/page-shell";
 import { formatZAR } from "@/lib/products";
 import { Truck, Package, CheckCircle2, Upload } from "lucide-react";
 
-export const Route = createFileRoute("/orders")({
+export const Route = createFileRoute("/_authenticated/orders")({
   component: OrdersPage,
   head: () => ({ meta: [{ title: "Orders — Auren" }, { name: "description", content: "Track your Auren orders, upload proof of payment, and follow deliveries." }] }),
 });
