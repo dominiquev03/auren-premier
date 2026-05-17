@@ -75,6 +75,7 @@ function QuotationsPage() {
           </tbody>
         </table>
       </div>
+      <QuoteRequestComposer open={open} onClose={() => setOpen(false)} />
     </PageShell>
   );
 }
