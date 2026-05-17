@@ -87,12 +87,12 @@ function Home() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Repeat, t: "Reorder last", d: "ORD-7820 in one tap", to: "/orders" },
-            { icon: FileText, t: "Fast quote", d: "Snap a plan, get pricing", to: "/quotations" },
-            { icon: PackageSearch, t: "Browse stock", d: "Live JHB & CPT inventory", to: "/products" },
-            { icon: Receipt, t: "Upload POP", d: "Clear pending invoices", to: "/orders" },
+            { icon: Repeat, t: "Reorder last", d: "ORD-7820 in one tap", to: "/orders" as const, search: undefined },
+            { icon: FileText, t: "Fast quote", d: "Photo, voice note, send", to: "/quotations" as const, search: { new: 1 as const } },
+            { icon: PackageSearch, t: "Browse stock", d: "Live JHB & CPT inventory", to: "/products" as const, search: undefined },
+            { icon: Receipt, t: "Upload POP", d: "Clear pending invoices", to: "/orders" as const, search: undefined },
           ].map((a) => (
-            <Link key={a.t} to={a.to} className="group border border-border/60 rounded-xl p-5 hover:border-primary/50 hover:bg-secondary/30 transition flex flex-col gap-3">
+            <Link key={a.t} to={a.to} search={a.search as never} className="group border border-border/60 rounded-xl p-5 hover:border-primary/50 hover:bg-secondary/30 transition flex flex-col gap-3">
               <div className="h-10 w-10 rounded-full bg-gold-gradient grid place-items-center text-primary-foreground shadow-gold-glow">
                 <a.icon className="h-4 w-4" />
               </div>
