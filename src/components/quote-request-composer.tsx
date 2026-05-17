@@ -114,6 +114,7 @@ export function QuoteRequestComposer({ open, onClose }: { open: boolean; onClose
             url,
             size: blob.size,
             durationMs: Date.now() - startedAtRef.current,
+            file: blob,
           },
         ]);
         stream.getTracks().forEach((t) => t.stop());
