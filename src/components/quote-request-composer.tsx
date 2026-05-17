@@ -82,6 +82,7 @@ export function QuoteRequestComposer({ open, onClose }: { open: boolean; onClose
         name: f.name,
         url: URL.createObjectURL(f),
         size: f.size,
+        file: f,
       });
     });
     setAttachments((cur) => [...cur, ...next]);
