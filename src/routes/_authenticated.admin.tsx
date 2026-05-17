@@ -40,22 +40,26 @@ function AdminPage() {
 
   async function load() {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("quote_requests")
-      .select("*, quote_attachments(id,kind,storage_path,name), profiles:profiles!quote_requests_user_id_fkey(full_name,company_name,email,mobile)")
+      .select("*, quote_attachments(id,kind,storage_path,name)")
       .order("created_at", { ascending: false })
       .limit(200);
-    if (error) {
-      // fallback without join if FK ambiguous
-      const fb = await supabase
-        .from("quote_requests")
-        .select("*, quote_attachments(id,kind,storage_path,name)")
-        .order("created_at", { ascending: false })
-        .limit(200);
-      setQuotes((fb.data ?? []) as QuoteRow[]);
-    } else {
-      setQuotes((data ?? []) as QuoteRow[]);
+    const rows = (data ?? []) as unknown as QuoteRow[];
+    // hydrate profiles separately (RLS allows staff to read all)
+    const userIds = Array.from(new Set(rows.map((r) => r.user_id)));
+    if (userIds.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id,full_name,company_name,email,mobile")
+        .in("id", userIds);
+      const map = new Map((profs ?? []).map((p) => [p.id, p]));
+      rows.forEach((r) => {
+        const p = map.get(r.user_id);
+        if (p) r.profiles = { full_name: p.full_name, company_name: p.company_name, email: p.email, mobile: p.mobile };
+      });
     }
+    setQuotes(rows);
     setLoading(false);
   }
 
