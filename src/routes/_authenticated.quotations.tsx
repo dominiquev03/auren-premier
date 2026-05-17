@@ -1,32 +1,61 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PageShell } from "@/components/page-shell";
-import { formatZAR } from "@/lib/products";
-import { FileText, Plus, Image as ImageIcon, Mic, Video, MapPin } from "lucide-react";
+import { FileText, Plus, Image as ImageIcon, Mic, Video, MapPin, Loader2 } from "lucide-react";
 import { QuoteRequestComposer } from "@/components/quote-request-composer";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/quotations")({
   component: QuotationsPage,
   validateSearch: (s: Record<string, unknown>) => ({ new: s.new === "1" || s.new === 1 ? 1 : undefined }) as { new?: 1 },
-  head: () => ({ meta: [{ title: "Quotations — Auren" }, { name: "description", content: "Request and manage your Auren quotations." }] }),
+  head: () => ({ meta: [{ title: "Quotations — Auren" }] }),
 });
 
-const quotes = [
-  { id: "QTN-2104", date: "12 May 2026", items: 14, total: 48750, status: "Awaiting approval" },
-  { id: "QTN-2098", date: "04 May 2026", items: 6, total: 12490, status: "Approved" },
-  { id: "QTN-2085", date: "21 Apr 2026", items: 22, total: 86430, status: "Converted to order" },
-];
+type QuoteRow = {
+  id: string;
+  message: string | null;
+  urgency: "standard" | "priority" | "urgent";
+  status: "new" | "in_review" | "quoted" | "closed";
+  site_address: string | null;
+  created_at: string;
+};
 
 function QuotationsPage() {
   const search = useSearch({ from: "/_authenticated/quotations" });
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [quotes, setQuotes] = useState<QuoteRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (search.new === 1) setOpen(true);
   }, [search.new]);
 
+  async function load() {
+    if (!user) return;
+    setLoading(true);
+    const { data } = await supabase
+      .from("quote_requests")
+      .select("id,message,urgency,status,site_address,created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    setQuotes((data ?? []) as QuoteRow[]);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  function onComposerClose() {
+    setOpen(false);
+    load();
+  }
+
   return (
     <PageShell eyebrow="Trade quotations" title="Quote it. Specify it. Win it." lead="Snap a photo, record a voice note, drop a pin — we'll quote it. As simple as WhatsApp." watermark>
-      {/* Fast request card */}
       <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/30 p-6 md:p-8">
         <div className="absolute inset-0 bg-gold-gradient opacity-[0.06]" />
         <div className="relative flex flex-col md:flex-row md:items-center gap-5 justify-between">
@@ -46,36 +75,30 @@ function QuotationsPage() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-muted-foreground">{quotes.length} active quotations</p>
-      </div>
-      <div className="border border-border/60 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-secondary/50">
-            <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground">
-              <th className="py-4 px-5">Reference</th>
-              <th className="py-4 px-5">Date</th>
-              <th className="py-4 px-5">Items</th>
-              <th className="py-4 px-5">Total</th>
-              <th className="py-4 px-5">Status</th>
-              <th className="py-4 px-5"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {quotes.map((q) => (
-              <tr key={q.id} className="border-t border-border/60 hover:bg-secondary/30 transition">
-                <td className="py-4 px-5 font-medium flex items-center gap-2"><FileText className="h-4 w-4 text-primary" />{q.id}</td>
-                <td className="py-4 px-5 text-muted-foreground">{q.date}</td>
-                <td className="py-4 px-5 text-muted-foreground">{q.items}</td>
-                <td className="py-4 px-5 font-medium">{formatZAR(q.total)}</td>
-                <td className="py-4 px-5"><span className="text-xs border border-primary/40 text-primary px-2.5 py-1 rounded-full">{q.status}</span></td>
-                <td className="py-4 px-5 text-right"><button className="text-xs text-primary hover:underline">View</button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <QuoteRequestComposer open={open} onClose={() => setOpen(false)} />
+      {loading ? (
+        <div className="py-12 grid place-items-center"><Loader2 className="h-5 w-5 animate-spin text-primary" /></div>
+      ) : quotes.length === 0 ? (
+        <div className="border border-dashed border-border/60 rounded-xl p-10 text-center">
+          <FileText className="h-6 w-6 text-primary mx-auto" />
+          <p className="mt-3 text-sm text-muted-foreground">No quotations yet. Send your first one in under 30 seconds.</p>
+        </div>
+      ) : (
+        <div className="border border-border/60 rounded-xl overflow-hidden">
+          <div className="hidden md:grid grid-cols-[1fr_120px_140px_180px_140px] gap-3 bg-secondary/50 px-5 py-3 text-xs uppercase tracking-wider text-muted-foreground">
+            <span>Request</span><span>Urgency</span><span>Date</span><span>Site</span><span>Status</span>
+          </div>
+          {quotes.map((q) => (
+            <div key={q.id} className="grid md:grid-cols-[1fr_120px_140px_180px_140px] gap-2 md:gap-3 border-t border-border/60 px-5 py-4 hover:bg-secondary/30 transition text-sm">
+              <span className="font-medium truncate flex items-center gap-2"><FileText className="h-4 w-4 text-primary shrink-0" />{q.message?.slice(0, 80) || "(media-only request)"}</span>
+              <span className="capitalize text-muted-foreground">{q.urgency}</span>
+              <span className="text-muted-foreground">{new Date(q.created_at).toLocaleDateString("en-ZA")}</span>
+              <span className="text-muted-foreground truncate">{q.site_address || "—"}</span>
+              <span><span className="text-xs border border-primary/40 text-primary px-2.5 py-1 rounded-full capitalize">{q.status.replace("_", " ")}</span></span>
+            </div>
+          ))}
+        </div>
+      )}
+      <QuoteRequestComposer open={open} onClose={onComposerClose} />
     </PageShell>
   );
 }
