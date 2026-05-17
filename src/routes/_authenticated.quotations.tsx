@@ -5,7 +5,7 @@ import { formatZAR } from "@/lib/products";
 import { FileText, Plus, Image as ImageIcon, Mic, Video, MapPin } from "lucide-react";
 import { QuoteRequestComposer } from "@/components/quote-request-composer";
 
-export const Route = createFileRoute("/quotations")({
+export const Route = createFileRoute("/_authenticated/quotations")({
   component: QuotationsPage,
   validateSearch: (s: Record<string, unknown>) => ({ new: s.new === "1" || s.new === 1 ? 1 : undefined }) as { new?: 1 },
   head: () => ({ meta: [{ title: "Quotations — Auren" }, { name: "description", content: "Request and manage your Auren quotations." }] }),
@@ -18,7 +18,7 @@ const quotes = [
 ];
 
 function QuotationsPage() {
-  const search = useSearch({ from: "/quotations" });
+  const search = useSearch({ from: "/_authenticated/quotations" });
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (search.new === 1) setOpen(true);

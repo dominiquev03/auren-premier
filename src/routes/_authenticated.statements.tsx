@@ -3,7 +3,7 @@ import { PageShell } from "@/components/page-shell";
 import { formatZAR } from "@/lib/products";
 import { Download } from "lucide-react";
 
-export const Route = createFileRoute("/statements")({
+export const Route = createFileRoute("/_authenticated/statements")({
   component: StatementsPage,
   head: () => ({ meta: [{ title: "Statements & invoices — Auren" }, { name: "description", content: "Download invoices and monthly statements for your Auren account." }] }),
 });
