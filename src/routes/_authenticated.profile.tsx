@@ -104,6 +104,31 @@ function ProfilePage() {
     else toast.success("Profile saved.");
   }
 
+  async function toggleBiometric() {
+    if (!user) return;
+    setBioBusy(true);
+    try {
+      if (bioEnabled) {
+        disableBiometric(user.id);
+        setBioEnabled(false);
+        toast.success("Biometric login disabled.");
+      } else {
+        await enrollBiometric(user.id, user.email ?? profile.email ?? "user");
+        setBioEnabled(true);
+        toast.success("Biometric login enabled.");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not update biometric setting.");
+    } finally {
+      setBioBusy(false);
+    }
+  }
+
+  async function handleSignOut() {
+    await signOut();
+    navigate({ to: "/login" });
+  }
+
   const field = "w-full bg-input/40 border border-border rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-primary/60";
 
   if (loading) {
