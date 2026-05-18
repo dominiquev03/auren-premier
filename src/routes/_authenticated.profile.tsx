@@ -1,11 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageShell } from "@/components/page-shell";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Award, Loader2, Save, ShieldCheck } from "lucide-react";
+import { Award, Fingerprint, Loader2, LogOut, Save, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { formatZAR } from "@/lib/products";
+import {
+  disableBiometric,
+  enrollBiometric,
+  isEnrolled,
+  isPlatformAuthAvailable,
+} from "@/lib/biometric";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
