@@ -51,10 +51,21 @@ const empty: ProfileRow = {
 };
 
 function ProfilePage() {
-  const { user, roles } = useAuth();
+  const { user, roles, signOut } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileRow>(empty);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [bioSupported, setBioSupported] = useState(false);
+  const [bioEnabled, setBioEnabled] = useState(false);
+  const [bioBusy, setBioBusy] = useState(false);
+
+  useEffect(() => {
+    isPlatformAuthAvailable().then(setBioSupported);
+  }, []);
+  useEffect(() => {
+    if (user) setBioEnabled(isEnrolled(user.id));
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
