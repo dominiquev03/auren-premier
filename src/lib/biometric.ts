@@ -36,7 +36,6 @@ export async function isPlatformAuthAvailable(): Promise<boolean> {
   if (typeof window === "undefined") return false;
   if (!window.PublicKeyCredential) return false;
   try {
-    // @ts-expect-error - not in older lib.dom
     return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
   } catch {
     return false;
