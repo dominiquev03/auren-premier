@@ -54,6 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isStaff: roles.some((r) => r === "super_admin" || r === "admin" || r === "sales" || r === "delivery"),
     isSuperAdmin: roles.includes("super_admin"),
     signOut: async () => {
+      try {
+        const { clearVerified } = await import("@/lib/biometric");
+        clearVerified();
+      } catch { /* ignore */ }
       await supabase.auth.signOut();
     },
     refreshRoles: async () => loadRoles(session?.user.id),

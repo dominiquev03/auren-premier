@@ -13,6 +13,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { AuthProvider } from "@/hooks/use-auth";
+import { BiometricGate } from "@/components/biometric-gate";
 import { Toaster } from "sonner";
 
 function NotFoundComponent() {
@@ -123,15 +124,17 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col">
-          <SiteHeader />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <SiteFooter />
-          <WhatsAppButton />
-          <Toaster position="top-center" theme="dark" />
-        </div>
+        <BiometricGate>
+          <div className="min-h-screen flex flex-col">
+            <SiteHeader />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <SiteFooter />
+            <WhatsAppButton />
+            <Toaster position="top-center" theme="dark" />
+          </div>
+        </BiometricGate>
       </AuthProvider>
     </QueryClientProvider>
   );

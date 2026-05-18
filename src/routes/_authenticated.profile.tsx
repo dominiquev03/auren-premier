@@ -1,11 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageShell } from "@/components/page-shell";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { Award, Loader2, Save, ShieldCheck } from "lucide-react";
+import { Award, Fingerprint, Loader2, LogOut, Save, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { formatZAR } from "@/lib/products";
+import {
+  disableBiometric,
+  enrollBiometric,
+  isEnrolled,
+  isPlatformAuthAvailable,
+} from "@/lib/biometric";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -45,10 +51,21 @@ const empty: ProfileRow = {
 };
 
 function ProfilePage() {
-  const { user, roles } = useAuth();
+  const { user, roles, signOut } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileRow>(empty);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [bioSupported, setBioSupported] = useState(false);
+  const [bioEnabled, setBioEnabled] = useState(false);
+  const [bioBusy, setBioBusy] = useState(false);
+
+  useEffect(() => {
+    isPlatformAuthAvailable().then(setBioSupported);
+  }, []);
+  useEffect(() => {
+    if (user) setBioEnabled(isEnrolled(user.id));
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -87,6 +104,31 @@ function ProfilePage() {
     else toast.success("Profile saved.");
   }
 
+  async function toggleBiometric() {
+    if (!user) return;
+    setBioBusy(true);
+    try {
+      if (bioEnabled) {
+        disableBiometric(user.id);
+        setBioEnabled(false);
+        toast.success("Biometric login disabled.");
+      } else {
+        await enrollBiometric(user.id, user.email ?? profile.email ?? "user");
+        setBioEnabled(true);
+        toast.success("Biometric login enabled.");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not update biometric setting.");
+    } finally {
+      setBioBusy(false);
+    }
+  }
+
+  async function handleSignOut() {
+    await signOut();
+    navigate({ to: "/login" });
+  }
+
   const field = "w-full bg-input/40 border border-border rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-primary/60";
 
   if (loading) {
@@ -122,6 +164,39 @@ function ProfilePage() {
             ))}
           </div>
           <p className="text-[11px] text-muted-foreground mt-3">Only the Super Admin can change account roles or pricing levels.</p>
+        </div>
+      </div>
+
+      <div className="border border-border/60 rounded-xl p-5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <Fingerprint className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium">Biometric login</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {bioSupported
+                ? bioEnabled
+                  ? "Face ID / fingerprint unlock is enabled on this device."
+                  : "Enable Face ID, fingerprint or device passcode for quick secure access."
+                : "Not available on this device or browser."}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={toggleBiometric}
+            disabled={!bioSupported || bioBusy}
+            className={`text-xs px-4 py-2 rounded-full border transition disabled:opacity-50 ${bioEnabled ? "border-border hover:border-destructive/60 hover:text-destructive" : "border-primary text-primary hover:bg-primary/10"}`}
+          >
+            {bioBusy ? "…" : bioEnabled ? "Disable" : "Enable"}
+          </button>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="text-xs px-4 py-2 rounded-full border border-border inline-flex items-center gap-1.5 hover:border-destructive/60 hover:text-destructive transition"
+          >
+            <LogOut className="h-3.5 w-3.5" /> Sign out
+          </button>
         </div>
       </div>
 
