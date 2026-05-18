@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PageShell } from "@/components/page-shell";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,15 +28,16 @@ type QuoteRow = {
 
 function AdminPage() {
   const { isStaff, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [quotes, setQuotes] = useState<QuoteRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | QuoteRow["status"]>("all");
 
   useEffect(() => {
     if (!authLoading && !isStaff) {
-      throw redirect({ to: "/" });
+      navigate({ to: "/" });
     }
-  }, [authLoading, isStaff]);
+  }, [authLoading, isStaff, navigate]);
 
   async function load() {
     setLoading(true);
