@@ -167,6 +167,39 @@ function ProfilePage() {
         </div>
       </div>
 
+      <div className="border border-border/60 rounded-xl p-5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <Fingerprint className="h-6 w-6 text-primary mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium">Biometric login</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {bioSupported
+                ? bioEnabled
+                  ? "Face ID / fingerprint unlock is enabled on this device."
+                  : "Enable Face ID, fingerprint or device passcode for quick secure access."
+                : "Not available on this device or browser."}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={toggleBiometric}
+            disabled={!bioSupported || bioBusy}
+            className={`text-xs px-4 py-2 rounded-full border transition disabled:opacity-50 ${bioEnabled ? "border-border hover:border-destructive/60 hover:text-destructive" : "border-primary text-primary hover:bg-primary/10"}`}
+          >
+            {bioBusy ? "…" : bioEnabled ? "Disable" : "Enable"}
+          </button>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="text-xs px-4 py-2 rounded-full border border-border inline-flex items-center gap-1.5 hover:border-destructive/60 hover:text-destructive transition"
+          >
+            <LogOut className="h-3.5 w-3.5" /> Sign out
+          </button>
+        </div>
+      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
