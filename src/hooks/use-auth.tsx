@@ -2,7 +2,16 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "super_admin" | "admin" | "sales" | "delivery" | "customer";
+export type AppRole =
+  | "super_admin"
+  | "admin"
+  | "sales"
+  | "delivery"
+  | "warehouse"
+  | "accounting"
+  | "customer";
+
+export const STAFF_ROLES: AppRole[] = ["super_admin", "admin", "sales", "delivery", "warehouse", "accounting"];
 
 type AuthState = {
   session: Session | null;
@@ -11,8 +20,33 @@ type AuthState = {
   loading: boolean;
   isStaff: boolean;
   isSuperAdmin: boolean;
+  isAdmin: boolean;
+  hasRole: (role: AppRole) => boolean;
+  hasAny: (roles: AppRole[]) => boolean;
+  can: (action: Permission) => boolean;
   signOut: () => Promise<void>;
   refreshRoles: () => Promise<void>;
+};
+
+export type Permission =
+  | "quotes.manage"
+  | "orders.manage"
+  | "inventory.manage"
+  | "payments.manage"
+  | "pricing.edit"
+  | "users.manage"
+  | "settings.manage"
+  | "audit.view";
+
+const PERMISSION_MATRIX: Record<Permission, AppRole[]> = {
+  "quotes.manage": ["super_admin", "admin", "sales"],
+  "orders.manage": ["super_admin", "admin", "sales", "delivery"],
+  "inventory.manage": ["super_admin", "admin", "warehouse"],
+  "payments.manage": ["super_admin", "admin", "accounting"],
+  "pricing.edit": ["super_admin", "admin"],
+  "users.manage": ["super_admin"],
+  "settings.manage": ["super_admin"],
+  "audit.view": ["super_admin"],
 };
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
@@ -34,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s);
-      // defer to avoid deadlock
       setTimeout(() => {
         loadRoles(s?.user.id);
       }, 0);
@@ -46,13 +79,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
+  const hasRole = (role: AppRole) => roles.includes(role);
+  const hasAny = (rs: AppRole[]) => rs.some((r) => roles.includes(r));
+  const can = (action: Permission) => hasAny(PERMISSION_MATRIX[action]);
+
   const value: AuthState = {
     session,
     user: session?.user ?? null,
     roles,
     loading,
-    isStaff: roles.some((r) => r === "super_admin" || r === "admin" || r === "sales" || r === "delivery"),
-    isSuperAdmin: roles.includes("super_admin"),
+    isStaff: hasAny(STAFF_ROLES),
+    isSuperAdmin: hasRole("super_admin"),
+    isAdmin: hasAny(["super_admin", "admin"]),
+    hasRole,
+    hasAny,
+    can,
     signOut: async () => {
       try {
         const { clearVerified } = await import("@/lib/biometric");
