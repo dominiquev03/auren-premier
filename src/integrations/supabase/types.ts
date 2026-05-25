@@ -14,6 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      guest_quote_attachments: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          id: string
+          kind: Database["public"]["Enums"]["attachment_kind"]
+          name: string | null
+          quote_id: string
+          size: number | null
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind: Database["public"]["Enums"]["attachment_kind"]
+          name?: string | null
+          quote_id: string
+          size?: number | null
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["attachment_kind"]
+          name?: string | null
+          quote_id?: string
+          size?: number | null
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_quote_attachments_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "guest_quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guest_quote_requests: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string
+          gps_lat: number | null
+          gps_lng: number | null
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          processed_at: string | null
+          site_address: string | null
+          status: Database["public"]["Enums"]["quote_status"]
+          urgency: Database["public"]["Enums"]["quote_urgency"]
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          processed_at?: string | null
+          site_address?: string | null
+          status?: Database["public"]["Enums"]["quote_status"]
+          urgency?: Database["public"]["Enums"]["quote_urgency"]
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          processed_at?: string | null
+          site_address?: string | null
+          status?: Database["public"]["Enums"]["quote_status"]
+          urgency?: Database["public"]["Enums"]["quote_urgency"]
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           account_type: Database["public"]["Enums"]["account_type"]
