@@ -48,10 +48,12 @@ type GuestQuote = {
   guest_quote_attachments: Attachment[];
 };
 
+type TopTab = "guest" | "customer" | "users" | "audit";
+
 function AdminPage() {
-  const { isStaff, loading: authLoading } = useAuth();
+  const { isStaff, isSuperAdmin, can, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<"guest" | "customer">("guest");
+  const [tab, setTab] = useState<TopTab>("guest");
   const [customer, setCustomer] = useState<CustomerQuote[]>([]);
   const [guest, setGuest] = useState<GuestQuote[]>([]);
   const [loading, setLoading] = useState(true);
