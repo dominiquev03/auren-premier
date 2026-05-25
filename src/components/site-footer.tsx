@@ -23,7 +23,7 @@ export function SiteFooter() {
           <h4 className="text-xs uppercase tracking-[0.2em] text-primary mb-4 font-sans font-medium">Explore</h4>
           <ul className="space-y-2.5 text-sm text-muted-foreground">
             <li><Link to="/products" className="hover:text-foreground">Products</Link></li>
-            <li><Link to="/quotations" className="hover:text-foreground">Quotations</Link></li>
+            <li><Link to="/quote" className="hover:text-foreground">Get a quote</Link></li>
             <li><Link to="/orders" className="hover:text-foreground">Orders</Link></li>
             <li><Link to="/statements" className="hover:text-foreground">Statements</Link></li>
           </ul>
