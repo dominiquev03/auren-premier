@@ -2,13 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PageShell } from "@/components/page-shell";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
-import { FileText, Image as ImageIcon, Video, Mic, MapPin, Loader2, RefreshCw } from "lucide-react";
+import { useAuth, STAFF_ROLES, type AppRole } from "@/hooks/use-auth";
+import { audit } from "@/lib/audit";
+import { FileText, Image as ImageIcon, Video, Mic, MapPin, Loader2, RefreshCw, Shield, ScrollText, Users } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
-  head: () => ({ meta: [{ title: "Admin · Quote inbox — Auren" }] }),
+  head: () => ({ meta: [{ title: "Admin · Auren" }] }),
 });
 
 type Status = "new" | "in_review" | "quoted" | "closed";
