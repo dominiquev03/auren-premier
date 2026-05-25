@@ -43,7 +43,7 @@ function Home() {
               <Link to="/products" className="inline-flex items-center gap-2 bg-gold-gradient text-primary-foreground font-medium px-6 py-3.5 rounded-full shadow-gold-glow hover:opacity-90 transition">
                 Browse catalogue <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/quotations" className="inline-flex items-center gap-2 border border-border px-6 py-3.5 rounded-full text-sm hover:border-primary/60 transition">
+              <Link to="/quote" className="inline-flex items-center gap-2 border border-border px-6 py-3.5 rounded-full text-sm hover:border-primary/60 transition">
                 Request a quotation
               </Link>
             </div>
