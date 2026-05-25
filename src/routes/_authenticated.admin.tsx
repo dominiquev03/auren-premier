@@ -89,9 +89,11 @@ function AdminPage() {
   }, [isStaff]);
 
   async function updateStatus(table: "quote_requests" | "guest_quote_requests", id: string, status: Status) {
+    if (!can("quotes.manage")) return toast.error("You don't have permission to update quotes.");
     const { error } = await supabase.from(table).update({ status, processed_at: new Date().toISOString() }).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Status updated.");
+    await audit("quote.status_changed", { resourceType: table, resourceId: id, metadata: { status } });
     if (table === "quote_requests") setCustomer((cur) => cur.map((q) => (q.id === id ? { ...q, status } : q)));
     else setGuest((cur) => cur.map((q) => (q.id === id ? { ...q, status } : q)));
   }
