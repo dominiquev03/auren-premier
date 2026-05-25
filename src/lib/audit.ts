@@ -25,7 +25,7 @@ export async function audit(
       action,
       resource_type: opts.resourceType ?? null,
       resource_id: opts.resourceId ?? null,
-      metadata: opts.metadata ?? null,
+      metadata: (opts.metadata ?? null) as never,
     });
   } catch {
     /* never block UX on audit failure */
