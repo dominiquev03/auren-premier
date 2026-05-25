@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as QuoteRouteImport } from './routes/quote'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
@@ -27,6 +28,11 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteRoute = QuoteRouteImport.update({
+  id: '/quote',
+  path: '/quote',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/orders': typeof AuthenticatedOrdersRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/orders': typeof AuthenticatedOrdersRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/products': typeof ProductsRoute
+  '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/products'
+    | '/quote'
     | '/support'
     | '/admin'
     | '/orders'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/products'
+    | '/quote'
     | '/support'
     | '/admin'
     | '/orders'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/products'
+    | '/quote'
     | '/support'
     | '/_authenticated/admin'
     | '/_authenticated/orders'
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   LegalRoute: typeof LegalRouteWithChildren
   LoginRoute: typeof LoginRoute
   ProductsRoute: typeof ProductsRoute
+  QuoteRoute: typeof QuoteRoute
   SupportRoute: typeof SupportRoute
 }
 
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote': {
+      id: '/quote'
+      path: '/quote'
+      fullPath: '/quote'
+      preLoaderRoute: typeof QuoteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -342,6 +362,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalRoute: LegalRouteWithChildren,
   LoginRoute: LoginRoute,
   ProductsRoute: ProductsRoute,
+  QuoteRoute: QuoteRoute,
   SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport
