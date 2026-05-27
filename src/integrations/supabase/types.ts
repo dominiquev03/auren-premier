@@ -47,6 +47,178 @@ export type Database = {
         }
         Relationships: []
       }
+      deliveries: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          customer_email: string | null
+          customer_id: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivered_at: string | null
+          delivery_address: string | null
+          delivery_notes: string | null
+          dispatched_at: string | null
+          driver_id: string | null
+          failure_reason: string | null
+          gps_lat: number | null
+          gps_lng: number | null
+          guest_quote_id: string | null
+          id: string
+          invoice_ref: string | null
+          pod_gps_lat: number | null
+          pod_gps_lng: number | null
+          pod_signature_path: string | null
+          pod_signed_at: string | null
+          pod_signed_name: string | null
+          project_ref: string | null
+          quote_id: string | null
+          reference: string | null
+          scheduled_at: string | null
+          status: Database["public"]["Enums"]["delivery_status"]
+          total_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          delivery_address?: string | null
+          delivery_notes?: string | null
+          dispatched_at?: string | null
+          driver_id?: string | null
+          failure_reason?: string | null
+          gps_lat?: number | null
+          gps_lng?: number | null
+          guest_quote_id?: string | null
+          id?: string
+          invoice_ref?: string | null
+          pod_gps_lat?: number | null
+          pod_gps_lng?: number | null
+          pod_signature_path?: string | null
+          pod_signed_at?: string | null
+          pod_signed_name?: string | null
+          project_ref?: string | null
+          quote_id?: string | null
+          reference?: string | null
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["delivery_status"]
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_id?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivered_at?: string | null
+          delivery_address?: string | null
+          delivery_notes?: string | null
+          dispatched_at?: string | null
+          driver_id?: string | null
+          failure_reason?: string | null
+          gps_lat?: number | null
+          gps_lng?: number | null
+          guest_quote_id?: string | null
+          id?: string
+          invoice_ref?: string | null
+          pod_gps_lat?: number | null
+          pod_gps_lng?: number | null
+          pod_signature_path?: string | null
+          pod_signed_at?: string | null
+          pod_signed_name?: string | null
+          project_ref?: string | null
+          quote_id?: string | null
+          reference?: string | null
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["delivery_status"]
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      delivery_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          delivery_id: string
+          gps_lat: number | null
+          gps_lng: number | null
+          id: string
+          note: string | null
+          status: Database["public"]["Enums"]["delivery_status"]
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          delivery_id: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          note?: string | null
+          status: Database["public"]["Enums"]["delivery_status"]
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          delivery_id?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          id?: string
+          note?: string | null
+          status?: Database["public"]["Enums"]["delivery_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_events_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      delivery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          delivery_id: string
+          id: string
+          storage_path: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          delivery_id: string
+          id?: string
+          storage_path: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          delivery_id?: string
+          id?: string
+          storage_path?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_photos_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       guest_quote_attachments: {
         Row: {
           created_at: string
@@ -342,6 +514,12 @@ export type Database = {
         | "warehouse"
         | "accounting"
       attachment_kind: "image" | "video" | "audio"
+      delivery_status:
+        | "pending"
+        | "dispatched"
+        | "out_for_delivery"
+        | "delivered"
+        | "failed"
       quote_status: "new" | "in_review" | "quoted" | "closed"
       quote_urgency: "standard" | "priority" | "urgent"
     }
@@ -482,6 +660,13 @@ export const Constants = {
         "accounting",
       ],
       attachment_kind: ["image", "video", "audio"],
+      delivery_status: [
+        "pending",
+        "dispatched",
+        "out_for_delivery",
+        "delivered",
+        "failed",
+      ],
       quote_status: ["new", "in_review", "quoted", "closed"],
       quote_urgency: ["standard", "priority", "urgent"],
     },
