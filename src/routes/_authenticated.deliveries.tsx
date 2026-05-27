@@ -186,3 +186,74 @@ function DeliveryPhotos({ photos }: { photos: Photo[] }) {
     </div>
   );
 }
+
+function ScheduleButton({ onCreated }: { onCreated: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({
+    customer_name: "", customer_email: "", customer_phone: "",
+    delivery_address: "", scheduled_at: "", reference: "",
+    invoice_ref: "", project_ref: "", delivery_notes: "",
+  });
+  function set<K extends keyof typeof form>(k: K, v: string) { setForm((f) => ({ ...f, [k]: v })); }
+  async function submit() {
+    if (!form.customer_name.trim() || !form.delivery_address.trim()) { toast.error("Customer & address required"); return; }
+    setBusy(true);
+    const payload = {
+      ...form,
+      scheduled_at: form.scheduled_at ? new Date(form.scheduled_at).toISOString() : null,
+      status: "pending" as const,
+    };
+    const { error } = await (supabase as any).from("deliveries").insert(payload);
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Delivery scheduled");
+    setOpen(false);
+    setForm({ customer_name: "", customer_email: "", customer_phone: "", delivery_address: "", scheduled_at: "", reference: "", invoice_ref: "", project_ref: "", delivery_notes: "" });
+    onCreated();
+  }
+  return (
+    <>
+      <button onClick={() => setOpen(true)} className="inline-flex items-center gap-2 text-sm border border-primary/40 text-primary px-4 py-2 rounded-full hover:bg-primary/10 transition">
+        <Plus className="h-4 w-4" /> Schedule
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md grid place-items-center p-4" onClick={() => setOpen(false)}>
+          <div className="bg-card border border-border rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+            <h2 className="font-display text-xl mb-4">Schedule delivery</h2>
+            <div className="grid gap-3 text-sm">
+              {([
+                ["customer_name","Customer name *"],
+                ["customer_email","Email"],
+                ["customer_phone","Phone"],
+                ["delivery_address","Delivery address *"],
+                ["reference","Reference (DEL-…)"],
+                ["invoice_ref","Invoice ref"],
+                ["project_ref","Project ref"],
+              ] as const).map(([k, label]) => (
+                <div key={k}>
+                  <label className="text-xs text-muted-foreground">{label}</label>
+                  <input value={form[k]} onChange={(e) => set(k, e.target.value)} className="mt-1 w-full bg-secondary/40 border border-border rounded-md px-3 py-2" />
+                </div>
+              ))}
+              <div>
+                <label className="text-xs text-muted-foreground">Scheduled at</label>
+                <input type="datetime-local" value={form.scheduled_at} onChange={(e) => set("scheduled_at", e.target.value)} className="mt-1 w-full bg-secondary/40 border border-border rounded-md px-3 py-2" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Notes</label>
+                <textarea value={form.delivery_notes} onChange={(e) => set("delivery_notes", e.target.value)} rows={2} className="mt-1 w-full bg-secondary/40 border border-border rounded-md px-3 py-2" />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-5">
+              <button onClick={() => setOpen(false)} className="px-4 py-2 text-sm text-muted-foreground">Cancel</button>
+              <button disabled={busy} onClick={submit} className="px-5 py-2 text-sm bg-gold-gradient text-primary-foreground rounded-full shadow-gold-glow">
+                {busy ? "Saving…" : "Schedule"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
