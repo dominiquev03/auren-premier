@@ -23,6 +23,8 @@ import { Route as AuthenticatedStatementsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authenticated.quotations'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated.profile'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated.orders'
+import { Route as AuthenticatedDriverRouteImport } from './routes/_authenticated.driver'
+import { Route as AuthenticatedDeliveriesRouteImport } from './routes/_authenticated.deliveries'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 
 const SupportRoute = SupportRouteImport.update({
@@ -94,6 +96,16 @@ const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDriverRoute = AuthenticatedDriverRouteImport.update({
+  id: '/driver',
+  path: '/driver',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDeliveriesRoute = AuthenticatedDeliveriesRouteImport.update({
+  id: '/deliveries',
+  path: '/deliveries',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -108,6 +120,8 @@ export interface FileRoutesByFullPath {
   '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/driver': typeof AuthenticatedDriverRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/quotations': typeof AuthenticatedQuotationsRoute
@@ -124,6 +138,8 @@ export interface FileRoutesByTo {
   '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/driver': typeof AuthenticatedDriverRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/quotations': typeof AuthenticatedQuotationsRoute
@@ -142,6 +158,8 @@ export interface FileRoutesById {
   '/quote': typeof QuoteRoute
   '/support': typeof SupportRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/deliveries': typeof AuthenticatedDeliveriesRoute
+  '/_authenticated/driver': typeof AuthenticatedDriverRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/quotations': typeof AuthenticatedQuotationsRoute
@@ -160,6 +178,8 @@ export interface FileRouteTypes {
     | '/quote'
     | '/support'
     | '/admin'
+    | '/deliveries'
+    | '/driver'
     | '/orders'
     | '/profile'
     | '/quotations'
@@ -176,6 +196,8 @@ export interface FileRouteTypes {
     | '/quote'
     | '/support'
     | '/admin'
+    | '/deliveries'
+    | '/driver'
     | '/orders'
     | '/profile'
     | '/quotations'
@@ -193,6 +215,8 @@ export interface FileRouteTypes {
     | '/quote'
     | '/support'
     | '/_authenticated/admin'
+    | '/_authenticated/deliveries'
+    | '/_authenticated/driver'
     | '/_authenticated/orders'
     | '/_authenticated/profile'
     | '/_authenticated/quotations'
@@ -312,6 +336,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/driver': {
+      id: '/_authenticated/driver'
+      path: '/driver'
+      fullPath: '/driver'
+      preLoaderRoute: typeof AuthenticatedDriverRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/deliveries': {
+      id: '/_authenticated/deliveries'
+      path: '/deliveries'
+      fullPath: '/deliveries'
+      preLoaderRoute: typeof AuthenticatedDeliveriesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -324,6 +362,8 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedDeliveriesRoute: typeof AuthenticatedDeliveriesRoute
+  AuthenticatedDriverRoute: typeof AuthenticatedDriverRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRoute
@@ -332,6 +372,8 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedDeliveriesRoute: AuthenticatedDeliveriesRoute,
+  AuthenticatedDriverRoute: AuthenticatedDriverRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedQuotationsRoute: AuthenticatedQuotationsRoute,
