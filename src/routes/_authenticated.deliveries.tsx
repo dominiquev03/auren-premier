@@ -4,7 +4,8 @@ import { PageShell } from "@/components/page-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { DELIVERY_STATUS_LABEL, DELIVERY_STATUS_ORDER, statusTone, type Delivery, type DeliveryStatus } from "@/lib/deliveries";
-import { Truck, Loader2, MapPin, PenLine, FileText, Package, ImageIcon, ShieldCheck } from "lucide-react";
+import { Truck, Loader2, MapPin, PenLine, FileText, Package, ImageIcon, ShieldCheck, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/deliveries")({
   component: DeliveriesPage,
@@ -60,11 +61,14 @@ function DeliveriesPage() {
             <span key={s} className={`px-2.5 py-1 rounded-full border ${statusTone(s)}`}>{DELIVERY_STATUS_LABEL[s]}</span>
           ))}
         </div>
-        {isDriver && (
-          <Link to="/driver" className="inline-flex items-center gap-2 text-sm bg-gold-gradient text-primary-foreground px-4 py-2 rounded-full shadow-gold-glow">
-            <Truck className="h-4 w-4" /> Driver console
-          </Link>
-        )}
+        <div className="flex gap-2">
+          {isStaff && <ScheduleButton onCreated={load} />}
+          {isDriver && (
+            <Link to="/driver" className="inline-flex items-center gap-2 text-sm bg-gold-gradient text-primary-foreground px-4 py-2 rounded-full shadow-gold-glow">
+              <Truck className="h-4 w-4" /> Driver console
+            </Link>
+          )}
+        </div>
       </div>
 
       {loading ? (
