@@ -26,8 +26,8 @@ function DeliveriesPage() {
 
   async function load() {
     setLoading(true);
-    const { data } = await supabase
-      .from("deliveries" as never)
+    const { data } = await (supabase as any)
+      .from("deliveries")
       .select("*")
       .order("scheduled_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false });
