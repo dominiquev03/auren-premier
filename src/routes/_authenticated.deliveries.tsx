@@ -41,8 +41,8 @@ function DeliveriesPage() {
     setSelected(d);
     setSigUrl(null);
     const [{ data: ev }, { data: ph }] = await Promise.all([
-      supabase.from("delivery_events" as never).select("*").eq("delivery_id", d.id).order("created_at", { ascending: false }),
-      supabase.from("delivery_photos" as never).select("*").eq("delivery_id", d.id).order("created_at", { ascending: false }),
+      (supabase as any).from("delivery_events").select("*").eq("delivery_id", d.id).order("created_at", { ascending: false }),
+      (supabase as any).from("delivery_photos").select("*").eq("delivery_id", d.id).order("created_at", { ascending: false }),
     ]);
     setEvents(((ev ?? []) as unknown) as Event[]);
     setPhotos(((ph ?? []) as unknown) as Photo[]);

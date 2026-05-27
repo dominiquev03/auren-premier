@@ -29,7 +29,7 @@ function DriverConsole() {
   async function load() {
     if (!user) return;
     setLoading(true);
-    let q = supabase.from("deliveries" as never).select("*").in("status", ["pending", "dispatched", "out_for_delivery"]);
+    let q = (supabase as any).from("deliveries").select("*").in("status", ["pending", "dispatched", "out_for_delivery"]);
     // drivers see only their own; admins see all
     if (!hasAny(["super_admin", "admin"])) q = q.eq("driver_id", user.id);
     const { data } = await q.order("scheduled_at", { ascending: true, nullsFirst: false });
@@ -84,9 +84,9 @@ function PodSheet({ delivery, onClose }: { delivery: Delivery; onClose: () => vo
       const gps = await currentGps();
       const patch: Record<string, unknown> = { status: next, ...extras };
       if (next === "dispatched" && !delivery.dispatched_at) patch.dispatched_at = new Date().toISOString();
-      const { error: e1 } = await supabase.from("deliveries" as never).update(patch).eq("id", delivery.id);
+      const { error: e1 } = await (supabase as any).from("deliveries").update(patch).eq("id", delivery.id);
       if (e1) throw e1;
-      await supabase.from("delivery_events" as never).insert({
+      await (supabase as any).from("delivery_events").insert({
         delivery_id: delivery.id, status: next, note: note ?? null,
         gps_lat: gps?.lat ?? null, gps_lng: gps?.lng ?? null, actor_id: user?.id ?? null,
       });
@@ -117,10 +117,10 @@ function PodSheet({ delivery, onClose }: { delivery: Delivery; onClose: () => vo
         const path = `${delivery.id}/photo-${Date.now()}-${f.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
         const { error: pErr } = await supabase.storage.from("delivery-pod").upload(path, f, { contentType: f.type, upsert: false });
         if (pErr) throw pErr;
-        await supabase.from("delivery_photos" as never).insert({ delivery_id: delivery.id, storage_path: path, uploaded_by: user?.id ?? null });
+        await (supabase as any).from("delivery_photos").insert({ delivery_id: delivery.id, storage_path: path, uploaded_by: user?.id ?? null });
       }
 
-      const { error: uErr } = await supabase.from("deliveries" as never).update({
+      const { error: uErr } = await (supabase as any).from("deliveries").update({
         status: "delivered",
         delivered_at: new Date().toISOString(),
         pod_signature_path: sigPath,
@@ -131,7 +131,7 @@ function PodSheet({ delivery, onClose }: { delivery: Delivery; onClose: () => vo
       }).eq("id", delivery.id);
       if (uErr) throw uErr;
 
-      await supabase.from("delivery_events" as never).insert({
+      await (supabase as any).from("delivery_events").insert({
         delivery_id: delivery.id, status: "delivered", note: notes || null,
         gps_lat: gps?.lat ?? null, gps_lng: gps?.lng ?? null, actor_id: user?.id ?? null,
       });
