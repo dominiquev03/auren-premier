@@ -14,6 +14,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { AuthProvider } from "@/hooks/use-auth";
 import { BiometricGate } from "@/components/biometric-gate";
+import { SplashScreen } from "@/components/splash-screen";
 import { Toaster } from "sonner";
 
 function NotFoundComponent() {
@@ -94,8 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/auren-logo.png" },
-      { rel: "icon", href: "/auren-logo.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/app-icon.png" },
+      { rel: "icon", href: "/app-icon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
@@ -125,6 +126,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BiometricGate>
+          <SplashScreen />
           <div className="min-h-screen flex flex-col">
             <SiteHeader />
             <main className="flex-1">
