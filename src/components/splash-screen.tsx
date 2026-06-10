@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import splash from "@/assets/splash-screen.png";
+import logo from "@/assets/auren-logo.png";
 
 const STORAGE_KEY = "auren.splash.shown";
 
@@ -9,7 +9,6 @@ export function SplashScreen() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Show once per session
     if (sessionStorage.getItem(STORAGE_KEY)) return;
     sessionStorage.setItem(STORAGE_KEY, "1");
     setVisible(true);
@@ -26,25 +25,31 @@ export function SplashScreen() {
   return (
     <div
       aria-hidden="true"
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0a0a] transition-opacity duration-700 ease-out ${
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0a0a0a] transition-opacity duration-700 ease-out ${
         fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
       style={{ animation: "auren-splash-in 600ms ease-out" }}
     >
       <img
-        src={splash}
-        alt=""
-        className="h-full w-full object-cover"
+        src={logo}
+        alt="Auren Plumbing Supplies"
+        className="w-40 h-40 object-contain"
         style={{ animation: "auren-splash-zoom 2200ms ease-out" }}
       />
+      <div
+        className="mt-6 font-display tracking-[0.35em] text-foreground/80 text-sm uppercase"
+        style={{ animation: "auren-splash-in 1200ms ease-out" }}
+      >
+        Auren Plumbing Supplies
+      </div>
       <style>{`
         @keyframes auren-splash-in {
           from { opacity: 0; }
           to { opacity: 1; }
         }
         @keyframes auren-splash-zoom {
-          from { transform: scale(1.04); filter: brightness(0.85); }
-          to { transform: scale(1); filter: brightness(1); }
+          from { transform: scale(0.96); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
       `}</style>
     </div>
