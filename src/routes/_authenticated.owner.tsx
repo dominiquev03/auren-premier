@@ -189,7 +189,8 @@ function ProductsPanel() {
     load();
   }
   async function toggle(p: Product, field: "is_active" | "is_featured") {
-    const { error } = await supabase.from("products").update({ [field]: !p[field] }).eq("id", p.id);
+    const patch = field === "is_active" ? { is_active: !p.is_active } : { is_featured: !p.is_featured };
+    const { error } = await supabase.from("products").update(patch).eq("id", p.id);
     if (error) return toast.error(error.message);
     load();
   }
