@@ -43,6 +43,11 @@ export function SiteHeader() {
               <ShieldCheck className="h-3.5 w-3.5" /> Admin
             </Link>
           )}
+          {isSuperAdmin && (
+            <Link to="/owner" className="text-sm text-primary inline-flex items-center gap-1.5" activeProps={{ className: "underline" }}>
+              <Crown className="h-3.5 w-3.5" /> Owner
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-2">
           {session ? (
