@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, User, LogOut, ShieldCheck } from "lucide-react";
+import { Menu, X, User, LogOut, ShieldCheck, Crown } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useAuth } from "@/hooks/use-auth";
 
