@@ -16,7 +16,7 @@ const nav = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const { session, isStaff, signOut } = useAuth();
+  const { session, isStaff, isSuperAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignOut() {
