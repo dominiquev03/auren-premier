@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, User, LogOut, ShieldCheck } from "lucide-react";
+import { Menu, X, User, LogOut, ShieldCheck, Crown } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -16,7 +16,7 @@ const nav = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const { session, isStaff, signOut } = useAuth();
+  const { session, isStaff, isSuperAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignOut() {
@@ -41,6 +41,11 @@ export function SiteHeader() {
           {isStaff && (
             <Link to="/admin" className="text-sm text-primary inline-flex items-center gap-1.5" activeProps={{ className: "underline" }}>
               <ShieldCheck className="h-3.5 w-3.5" /> Admin
+            </Link>
+          )}
+          {isSuperAdmin && (
+            <Link to="/owner" className="text-sm text-primary inline-flex items-center gap-1.5" activeProps={{ className: "underline" }}>
+              <Crown className="h-3.5 w-3.5" /> Owner
             </Link>
           )}
         </nav>
@@ -75,6 +80,11 @@ export function SiteHeader() {
             {isStaff && (
               <Link to="/admin" onClick={() => setOpen(false)} className="text-sm py-1.5 text-primary inline-flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5" /> Admin
+              </Link>
+            )}
+            {isSuperAdmin && (
+              <Link to="/owner" onClick={() => setOpen(false)} className="text-sm py-1.5 text-primary inline-flex items-center gap-1.5">
+                <Crown className="h-3.5 w-3.5" /> Owner
               </Link>
             )}
             {session ? (

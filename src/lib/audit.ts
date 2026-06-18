@@ -9,7 +9,19 @@ export type AuditAction =
   | "inventory.changed"
   | "payment.recorded"
   | "auth.signed_in"
-  | "auth.signed_out";
+  | "auth.signed_out"
+  | "product.created"
+  | "product.updated"
+  | "product.deleted"
+  | "category.created"
+  | "category.updated"
+  | "category.deleted"
+  | "banner.created"
+  | "banner.updated"
+  | "banner.deleted"
+  | "faq.created"
+  | "faq.updated"
+  | "faq.deleted";
 
 export async function audit(
   action: AuditAction,
