@@ -82,6 +82,11 @@ export function SiteHeader() {
                 <ShieldCheck className="h-3.5 w-3.5" /> Admin
               </Link>
             )}
+            {isSuperAdmin && (
+              <Link to="/owner" onClick={() => setOpen(false)} className="text-sm py-1.5 text-primary inline-flex items-center gap-1.5">
+                <Crown className="h-3.5 w-3.5" /> Owner
+              </Link>
+            )}
             {session ? (
               <>
                 <Link to="/profile" onClick={() => setOpen(false)} className="text-sm py-1.5 text-muted-foreground hover:text-foreground">Account</Link>
